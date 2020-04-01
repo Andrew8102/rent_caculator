@@ -1,4 +1,4 @@
-# cal
+# rent_caculator
 
 ## Project setup
 ```
