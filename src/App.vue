@@ -31,7 +31,7 @@
 
       <div class id="form">
         <form action>
-          <h2>输入基准租金价格</h2>
+          <h3>输入基准租金价格</h3>
           <div class="form-row justify-content-center">
             <div class="form-group col-md-6">
               <label for="d1">第几天</label>
@@ -52,21 +52,56 @@
               <input type="text" class="form-control" id="price2" @change="redraw" v-model="price2" />
             </div>
           </div>
-          <h2>填写折扣</h2>
-          <div class="btn btn-primary" @click="addCoupon">新增折扣</div>
+          <div class="form-row form-group">
+            <h3>填写折扣</h3>
+            <div class="btn btn-primary" @click="addCoupon">新增折扣</div>
+          </div>
 
           <div class="coupon form-row justify-content-center" v-for="(item, i) in coupons" :key="i">
             <div class="form-group col-md-6">
-              <label for="discount">优惠</label>
-              <input type="text" class="form-control" id="item.id" v-model="item.discount" />
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">优惠折扣</span>
+                </div>
+                <input type="text" class="form-control" id="item.id" v-model="item.discount" />
+              </div>
             </div>
 
-            <div class="form-group col-md-4">
-              <label for="discount_date">从几日开始</label>
-              <input type="text" class="form-control" id="item.id" v-model="item.discount_date" />
+            <div class="form-group col-md-5">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">从几日开始</span>
+                </div>
+                <input type="text" class="form-control" id="item.id" v-model="item.discount_date" />
+              </div>
             </div>
-            <div class="form-group col-md-2">
-              <div class="btn btn-primary" @click="deleteCoupon(i)">删除</div>
+
+            <div class="form-group col-md-1 align-self-center">
+              <svg
+                class="bi bi-x-circle"
+                width="1em"
+                height="1em"
+                viewBox="0 0 16 16"
+                fill="currentColor"
+                xmlns="http://www.w3.org/2000/svg"
+                @click="deleteCoupon(i)"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M8 15A7 7 0 108 1a7 7 0 000 14zm0 1A8 8 0 108 0a8 8 0 000 16z"
+                  clip-rule="evenodd"
+                />
+                <path
+                  fill-rule="evenodd"
+                  d="M11.854 4.146a.5.5 0 010 .708l-7 7a.5.5 0 01-.708-.708l7-7a.5.5 0 01.708 0z"
+                  clip-rule="evenodd"
+                />
+                <path
+                  fill-rule="evenodd"
+                  d="M4.146 4.146a.5.5 0 000 .708l7 7a.5.5 0 00.708-.708l-7-7a.5.5 0 00-.708 0z"
+                  clip-rule="evenodd"
+                />
+              </svg>
             </div>
           </div>
         </form>
@@ -137,21 +172,21 @@ export default {
         legend: {
           data: [
             {
-              name: "Sum",
-              // 强制设置图形为圆。
-              icon: "circle",
-              // 设置文本为红色
-              textStyle: {
-                color: "red"
-              }
-            },
-            {
               name: "Price",
               // 强制设置图形为圆。
               icon: "circle",
               // 设置文本为红色
               textStyle: {
                 color: "blue"
+              }
+            },
+            {
+              name: "Sum",
+              // 强制设置图形为圆。
+              icon: "circle",
+              // 设置文本为红色
+              textStyle: {
+                color: "red"
               }
             }
           ]
@@ -168,14 +203,14 @@ export default {
         ],
         series: [
           {
-            name: "Price",
+            name: "Sum",
             data: this.rent[0],
             type: "line",
             yAxisIndex: 0,
             smooth: true
           },
           {
-            name: "Sum",
+            name: "Price",
             data: this.rent[1],
             type: "line",
             yAxisIndex: 1,
@@ -241,6 +276,7 @@ body {
   max-width: 800px;
   margin: 0 auto;
 }
-#app {
+svg {
+  vertical-align: baseline;
 }
 </style>
