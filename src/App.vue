@@ -63,7 +63,16 @@
                 <div class="input-group-prepend">
                   <span class="input-group-text">优惠折扣</span>
                 </div>
-                <input type="text" class="form-control" id="item.id" v-model="item.discount" />
+                <input
+                  type="number"
+                  class="form-control"
+                  min="0.00"
+                  max="1.00"
+                  step="0.01"
+                  @change="redraw"
+                  id="item.id"
+                  v-model="item.discount"
+                />
               </div>
             </div>
 
@@ -72,7 +81,16 @@
                 <div class="input-group-prepend">
                   <span class="input-group-text">从几日开始</span>
                 </div>
-                <input type="text" class="form-control" id="item.id" v-model="item.discount_date" />
+                <input
+                  type="number"
+                  class="form-control"
+                  id="item.id"
+                  @change="redraw"
+                  :min="day1"
+                  :max="day2"
+                  step="1"
+                  v-model="item.discount_date"
+                />
               </div>
             </div>
 
@@ -84,7 +102,7 @@
                 viewBox="0 0 16 16"
                 fill="currentColor"
                 xmlns="http://www.w3.org/2000/svg"
-                @click="deleteCoupon(i)"
+                @click="deleteCoupon(i);redraw()"
               >
                 <path
                   fill-rule="evenodd"
@@ -140,7 +158,8 @@ export default {
           discount: 0.6
         }
       ],
-      option: {}
+      option: {},
+      arrPrice : []
     };
   },
   methods: {
@@ -204,21 +223,21 @@ export default {
         series: [
           {
             name: "Sum",
-            data: this.rent[0],
+            data: this.discountRent[0],
             type: "line",
             yAxisIndex: 0,
             smooth: true
           },
           {
             name: "Price",
-            data: this.rent[1],
+            data: this.discountRent[1],
             type: "line",
             yAxisIndex: 1,
             smooth: true
           }
         ]
       };
-      console.log(this.option);
+      //console.log(this.option);
     }
   },
   mounted() {
@@ -257,6 +276,76 @@ export default {
       console.log("定价公式:" + x);
       dataset.push(dataset_sum, dataset_price, x, xfx);
       return dataset;
+    },
+    discountRent: function() {
+      let arr = this.coupons;
+      //冒泡排序，先对打折的日期进行从小到大的排序，对应的折扣一起放置到arr数组当中
+      for (let i = 0; i < arr.length; i++) {
+        for (let j = 0; j < arr.length - 1 - i; j++) {
+          if (
+            parseInt(arr[j]["discount_date"]) >
+            parseInt(arr[j + 1]["discount_date"])
+          ) {
+            let temp = arr[j];
+            arr[j] = arr[j + 1];
+            arr[j + 1] = temp;
+          }
+        }
+      }
+      //由于js内部数组和对象是地址传递引用https://blog.csdn.net/zyddj123/article/details/86636724
+      //需要数组转为json字符串，再转为json对象进行赋值https://blog.csdn.net/qq_43363884/article/details/100511380
+      const temparr = JSON.parse(JSON.stringify(this.rent[1]))
+      //必须使用一个在此处不会受影响的数组
+      let price = temparr;
+      //console.log(price)
+      for (let n = 0; n < arr.length; n++) {
+        if (n == arr.length - 1) {
+          //判断是否是最后一个折扣，是的话计算日期延续到价格的最后日期，注意其与真实价格数组索引之间的关系
+          //其实可以用es2015的for...of新特性，参见https://mp.weixin.qq.com/s/mMXRsg-sNwxsXwk07Z4FIA
+          //console.log(n + "," + arr[n]["discount_date"] + "," + price[price.length - 1][0]);
+          for (
+            let i = parseInt(arr[n]["discount_date"]);
+            i <= parseInt(price[price.length - 1][0]);
+            i++
+          ) {
+            //console.log("数组真实索引i:" + (i - this.day1));
+            price[i - parseInt(this.day1)][1] = parseFloat(
+              (
+                price[i - parseInt(this.day1)][1] *
+                parseFloat(arr[n]["discount"])
+              ).toFixed(2)
+            );
+          }
+        } else {
+          //否则就只看折扣区间
+
+          for (
+            let i = parseInt(arr[n]["discount_date"]);
+            i < parseInt(arr[n + 1]["discount_date"]);
+            i++
+          ) {
+            //console.log("数组真实索引i:" + (i - this.day1));
+            price[i - parseInt(this.day1)][1] = parseFloat(
+              (
+                price[i - parseInt(this.day1)][1] *
+                parseFloat(arr[n]["discount"])
+              ).toFixed(2)
+            );
+          }
+        }
+      }
+
+      let sum = [];
+      //console.log(price);
+      for (let item of price) {
+        //console.log(item[0] + item[1]);
+        sum.push([
+          parseInt(item[0]),
+          parseFloat((item[1] * item[0]).toFixed(2))
+        ]);
+      }
+      let dateset_new = [sum, price];
+      return dateset_new;
     }
   }
 };
