@@ -131,7 +131,7 @@
         </form>
       </div>
     </div>
-    <div class="text-center"><p>©2020 Moechu.cn | Under MIT License</p></div>
+    <div class="text-center"><p>©2020 <a href="//Moechu.cn">Moechu.cn</a>  | Under MIT License</p></div>
   </div>
   
 </template>
