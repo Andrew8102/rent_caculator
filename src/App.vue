@@ -6,13 +6,19 @@
       <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown">
         <ul class="navbar-nav">
           <li class="nav-item active">
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="https://github.com/Andrew8102/rent_caculator">
+              Github项目地址
+              <span class="sr-only">(current)</span>
+            </a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="https://moechu.cn/lab.html">
               更多工具
               <span class="sr-only">(current)</span>
             </a>
           </li>
           <li class="nav-item active">
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="https://moechu.cn/">
               返回主页
               <span class="sr-only">(current)</span>
             </a>
@@ -125,7 +131,9 @@
         </form>
       </div>
     </div>
+    <div class="text-center"><p>©2020 Moechu.cn | Under MIT License</p></div>
   </div>
+  
 </template>
 
 <script>
