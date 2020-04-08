@@ -216,7 +216,8 @@ export default {
                 color: "red"
               }
             }
-          ]
+          ],
+          bottom: '0'
         },
         yAxis: [
           {
@@ -278,8 +279,8 @@ export default {
         dataset_sum.push([i, sum]);
         dataset_price.push([i, daily_price]);
       }
-      let x = "y=" + delta + "+" + fixed_earn + "/x";
-      let xfx = "y=" + delta + "x+" + fixed_earn;
+      let x = "y=" + delta.toFixed(2) + "+" + fixed_earn.toFixed(2) + "/x";
+      let xfx = "y=" + delta.toFixed(2) + "x+" + fixed_earn.toFixed(2);
       console.log("租金公式:" + xfx);
       console.log("定价公式:" + x);
       dataset.push(dataset_sum, dataset_price, x, xfx);
